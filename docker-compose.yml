@@ -10,11 +10,12 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mariadb:/bitnami/mariadb
+      - mariadb-data:/bitnami/mariadb
   myapp:
     image: bitnami/laravel
     container_name: myapp
     environment:
+      DB_CONNECTION: mysql
       DB_HOST: mariadb
       DB_PORT: 3306
       DB_USERNAME: bn_myapp
@@ -35,3 +36,7 @@ services:
       - "8080:80"
     depends_on:
       - mariadb
+
+volumes:
+  mariadb-data:
+    driver: local
