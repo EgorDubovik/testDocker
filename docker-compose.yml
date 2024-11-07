@@ -1,0 +1,37 @@
+version: '3.3'
+services:
+  mariadb:
+    image: bitnami/mariadb
+    container_name: mariadb
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+      MARIADB_USER: bn_myapp
+      MARIADB_DATABASE: bitnami_myapp
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mariadb:/bitnami/mariadb
+  myapp:
+    image: bitnami/laravel
+    container_name: myapp
+    environment:
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_USERNAME: bn_myapp
+      DB_DATABASE: bitnami_myapp
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./laravel-app:/app
+    depends_on:
+      - mariadb
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    depends_on:
+      - mariadb
